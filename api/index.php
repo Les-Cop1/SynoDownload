@@ -34,9 +34,11 @@ if (isset($_GET['method']) && $_SERVER['REQUEST_METHOD'] == "GET") {
         $url = $protocol . "://" . $ip;
         $destination = null;
 
-        if (login($url, $username, $password)) {
+        $login = login($url, $username, $password);
 
-            $result['success']  = download($url, $username, $password, $link, $destination);
+        if ($login['success']) {
+            $cookies = $login['cookies'];
+            $result['success']  = download($url, $username, $password, $link, $destination, $cookies);
 
             logout($url);
         } else {
@@ -61,7 +63,9 @@ if (isset($_GET['method']) && $_SERVER['REQUEST_METHOD'] == "GET") {
         $ip = $_GET['ip'];
         $url = $protocol . "://" . $ip;
 
-        if (login($url, $username, $password)) {
+        $login = login($url, $username, $password);
+
+        if ($login['success']) {
 
             if (logout($url)) {
                 $result['success'] = true;
@@ -104,9 +108,14 @@ function login($url, $username, $password) {
         parse_str($item, $cookie);
         $cookies = array_merge($cookies, $cookie);
     }
-    var_dump($cookies);
+    $result = array("cookies" => $cookies);
     curl_close($curl);
-    return json_decode($response, true)['success'];
+    if (count($result['cookies']) > 0) {
+        $result['success'] = true;
+    } else {
+        $result['success'] = false;
+    }
+    return $result;
 
 }
 
@@ -158,13 +167,15 @@ function listDownloads($url) {
     }
 }
 
-function download($url, $username, $password, $downloadLink, $destination) {
+function download($url, $username, $password, $downloadLink, $destination, $cookies) {
 
     $curl = curl_init();
 
     if (!is_null($destination)) {
         $destination = "&destination=" . $destination;
     }
+
+    $cookieText = "Cookie: smid=" . $cookies['smid'] . "; id=" . $cookies['id'];
 
     curl_setopt_array($curl, array(
         CURLOPT_URL => $url . "/webapi/DownloadStation/task.cgi?api=SYNO.DownloadStation.Task&version=1&method=create&username=" . $username . "&password=" . $password . "&uri=" . $downloadLink . $destination,
@@ -176,7 +187,7 @@ function download($url, $username, $password, $downloadLink, $destination) {
         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
         CURLOPT_CUSTOMREQUEST => "GET",
         CURLOPT_HTTPHEADER => array(
-            "Cookie: smid=DC_fjk7JTDu4KC8WwBYzpu62SbOA4nJcW-Ejmh60twut_PhKBbIApXy7fsXxQ9RKhtpQrHgkt-NQdu0kEaDn9A; id=sjKu5fX1oPFqs18B0Q8N652500"
+            $cookieText
         ),
     ));
 

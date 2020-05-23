@@ -19,6 +19,6 @@ $(function(){
             link = data.link
         }
 
-        $("#link").text(link.substr(0,20))
+        $("#link").text(link)
     })
 })
