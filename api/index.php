@@ -5,7 +5,7 @@ if (isset($_GET['method']) && $_SERVER['REQUEST_METHOD'] == "GET") {
     $result['success'] = true;
     if ($_GET['method'] == "list") {
         $result['method'] = "list";
-        $error = false;
+        $result['success'] = false;
 
         $username = $_GET['username'];
         $password = $_GET['password'];
@@ -24,7 +24,24 @@ if (isset($_GET['method']) && $_SERVER['REQUEST_METHOD'] == "GET") {
 
 
     } else if ($_GET['method'] == "download") {
-        $result['method'] = "download";
+        $result['success'] = false;
+
+        $username = $_GET['username'];
+        $password = $_GET['password'];
+        $protocol = $_GET['protocol'];
+        $link = $_GET['link'];
+        $ip = $_GET['ip'];
+        $url = $protocol . "://" . $ip;
+        $destination = null;
+
+        if (login($url, $username, $password)) {
+
+            $result['success']  = download($url, $username, $password, $link, $destination);
+
+            logout($url);
+        } else {
+            $result['success'] = false;
+        }
 
     } else if ($_GET['method'] == "delete") {
         $result['method'] = "delete";
@@ -76,13 +93,20 @@ function login($url, $username, $password) {
         CURLOPT_TIMEOUT => 0,
         CURLOPT_FOLLOWLOCATION => true,
         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        CURLOPT_CUSTOMREQUEST => "GET"
+        CURLOPT_CUSTOMREQUEST => "GET",
+        CURLOPT_HEADER => 1
     ));
 
-    $response = json_decode(curl_exec($curl), true);
-
+    $response = curl_exec($curl);
+    preg_match_all('/^Set-Cookie:\s*([^;]*)/mi', $response, $matches);
+    $cookies = array();
+    foreach($matches[1] as $item) {
+        parse_str($item, $cookie);
+        $cookies = array_merge($cookies, $cookie);
+    }
+    var_dump($cookies);
     curl_close($curl);
-    return $response['success'];
+    return json_decode($response, true)['success'];
 
 }
 
@@ -118,7 +142,10 @@ function listDownloads($url) {
         CURLOPT_TIMEOUT => 0,
         CURLOPT_FOLLOWLOCATION => true,
         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        CURLOPT_CUSTOMREQUEST => "GET"
+        CURLOPT_CUSTOMREQUEST => "GET",
+        CURLOPT_HTTPHEADER => array(
+            "Cookie: smid=DC_fjk7JTDu4KC8WwBYzpu62SbOA4nJcW-Ejmh60twut_PhKBbIApXy7fsXxQ9RKhtpQrHgkt-NQdu0kEaDn9A; id=sjKu5fX1oPFqs18B0Q8N652500"
+        ),
     ));
 
     $response = json_decode(curl_exec($curl), true);
@@ -129,6 +156,33 @@ function listDownloads($url) {
     } else {
         return $response['tasks'];
     }
+}
 
+function download($url, $username, $password, $downloadLink, $destination) {
+
+    $curl = curl_init();
+
+    if (!is_null($destination)) {
+        $destination = "&destination=" . $destination;
+    }
+
+    curl_setopt_array($curl, array(
+        CURLOPT_URL => $url . "/webapi/DownloadStation/task.cgi?api=SYNO.DownloadStation.Task&version=1&method=create&username=" . $username . "&password=" . $password . "&uri=" . $downloadLink . $destination,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => "",
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => "GET",
+        CURLOPT_HTTPHEADER => array(
+            "Cookie: smid=DC_fjk7JTDu4KC8WwBYzpu62SbOA4nJcW-Ejmh60twut_PhKBbIApXy7fsXxQ9RKhtpQrHgkt-NQdu0kEaDn9A; id=sjKu5fX1oPFqs18B0Q8N652500"
+        ),
+    ));
+
+    $response = json_decode(curl_exec($curl), true);
+
+    curl_close($curl);
+    return $response['success'];
 
 }
