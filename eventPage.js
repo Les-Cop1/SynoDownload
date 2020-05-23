@@ -62,7 +62,6 @@ chrome.contextMenus.onClicked.addListener(function(clickData){
 
                                     $.ajax(settings).done(function (response3) {
                                         chrome.storage.sync.get('nbDownloads', function (data3) {
-                                            console.log(data3.nbDownloads + 1)
                                             chrome.storage.sync.set({
                                                 nbDownloads: data3.nbDownloads + 1
                                             })

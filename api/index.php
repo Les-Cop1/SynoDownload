@@ -4,7 +4,6 @@ if (isset($_GET['method']) && $_SERVER['REQUEST_METHOD'] == "GET") {
     $result = array();
     $result['success'] = true;
     if ($_GET['method'] == "list") {
-        $result['method'] = "list";
         $result['success'] = false;
 
         $username = $_GET['username'];
@@ -13,9 +12,13 @@ if (isset($_GET['method']) && $_SERVER['REQUEST_METHOD'] == "GET") {
         $ip = $_GET['ip'];
         $url = $protocol . "://" . $ip;
 
-        if (login($url, $username, $password)) {
+        $login = login($url, $username, $password);
 
-            $result['tasks'] = listDownloads($url);
+        if ($login['success']) {
+            $cookies = $login['cookies'];
+            $response = listDownloads($url, $cookies);
+            $result['tasks'] = $response['tasks'];
+            $result['success'] = $response['success'];
 
             logout($url);
         } else {
@@ -140,8 +143,10 @@ function logout($url){
 
 }
 
-function listDownloads($url) {
+function listDownloads($url, $cookies) {
     $curl = curl_init();
+
+    $cookieText = "Cookie: smid=" . $cookies['smid'] . "; id=" . $cookies['id'];
 
     curl_setopt_array($curl, array(
         CURLOPT_URL => $url . "/webapi/DownloadStation/task.cgi?api=SYNO.DownloadStation.Task&version=1&method=list",
@@ -153,17 +158,19 @@ function listDownloads($url) {
         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
         CURLOPT_CUSTOMREQUEST => "GET",
         CURLOPT_HTTPHEADER => array(
-            "Cookie: smid=DC_fjk7JTDu4KC8WwBYzpu62SbOA4nJcW-Ejmh60twut_PhKBbIApXy7fsXxQ9RKhtpQrHgkt-NQdu0kEaDn9A; id=sjKu5fX1oPFqs18B0Q8N652500"
+            $cookieText
         ),
     ));
 
-    $response = json_decode(curl_exec($curl), true);
-    var_dump($response);
+    $response = curl_exec($curl);
+    $response = json_decode($response, true);
     curl_close($curl);
+
     if ($response['success'] == false) {
-        return array();
+        return array("success"=>false);
     } else {
-        return $response['tasks'];
+
+        return array("success" => true, "tasks" => $response['data']['tasks']);
     }
 }
 
