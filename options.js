@@ -66,14 +66,24 @@ $(function () {
             }
         })
 
+        let nasURL = host.split(':')[0];
+
         var settings = {
-            "url": protocol + "://" + host + "/webapi/auth.cgi?api=SYNO.API.Auth&version=2&method=login&account=" + username + "&passwd=" + password + "&session=DownloadStation&format=cookie",
+            "url": "http://" + nasURL + ":500/?method=status&username=" + username + "&password=" + password + "&protocol=http&ip=" + host,
             "method": "GET",
             "timeout": 0
         };
 
         $.ajax(settings).done(function (response) {
-            console.log(response);
+            response = JSON.parse(response)
+            let button = $('#testSynology')
+            if (response.success) {
+                button.removeClass("btn-danger")
+                button.addClass("btn-success")
+            } else {
+                button.removeClass("btn-success")
+                button.addClass("btn-danger")
+            }
         });
     })
 

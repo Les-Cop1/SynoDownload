@@ -1,6 +1,6 @@
 $(function(){
 
-    chrome.storage.sync.get('link', function (data) {
+    chrome.storage.sync.get('nbDownloads', function (data) {
         var nbDownloads = 0
 
         if (data.nbDownloads) {
