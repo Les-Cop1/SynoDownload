@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <title>SynoDownload</title>
+    <meta charset="UTF-8">
+    <script src="./node_modules/jquery/dist/jquery.min.js"></script>
+
+    <script src="./node_modules/@popperjs/core/dist/umd/popper.min.js"></script>
+
+    <script src="./node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">
+
+    <script src="./options.js"></script>
+</head>
+
+<body>
+    <nav class="navbar navbar-light bg-light">
+        <a class="navbar-brand" href="chrome-extension://kgjjnkfgdpledlonemphkckchlckgnag/options.html">
+            <img src="./images/icon_29pt.png" width="29" height="29" class="d-inline-block align-top" alt="logo">
+            SynoDownload
+        </a>
+    </nav>
+    <div id="root" class="root" style="padding: 10px;">
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <h5 class="card-header">Synology</h5>
+                    <div class="card-body">
+                        <form>
+                            <div class="form-group">
+                                <label for="host">Adresse</label>
+                                <input type="text" class="form-control" id="host" aria-describedby="host">
+                                <small id="hostHelp" class="form-text text-muted">IP ou nom de domaine</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="username">Identifiant</label>
+                                <input type="text" class="form-control" id="username">
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Mot de passe</label>
+                                <input type="password" class="form-control" id="password">
+                            </div>
+                            <div class="form-group">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="protocol" id="http" value="http" checked>
+                                    <label class="form-check-label" for="http">
+                                        http
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="protocol" id="https" value="https">
+                                    <label class="form-check-label" for="https">
+                                        https
+                                    </label>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-primary" id="submitSynology">Valider</button>
+                            <button type="button" class="btn btn-outline-primary" id="testSynology">Tester</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card">
+                    <h5 class="card-header">AllDebrid</h5>
+                    <div class="card-body">
+                        <form>
+                            <div class="form-group">
+                                <label for="apikey">Clé API</label>
+                                <input type="text" class="form-control" id="apikey" aria-describedby="host">
+                                <small id="apikeyHelp" class="form-text text-muted">Procurez-vous votre clé d'API sur <a href="https://alldebrid.com/apikeys" target="_blank">alldebrid.com/apikeys</a></small>
+                            </div>
+                            <button type="button" class="btn btn-primary" id="submitAllDebrid">Valider</button>
+                            <button type="button" class="btn btn-outline-primary" id="testAllDebird">Tester</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,24 @@
+{
+    "name": "SynoDownload",
+    "version": "1.0",
+    "description": "An extension that allows you to debrid and download a movie",
+    "manifest_version": 2,
+    "icons": {
+        "120": "images/icon_60pt@2x.png",
+        "40": "images/icon_40pt.png",
+        "20": "images/icon_20pt.png"
+    },
+    "browser_action": {
+        "default_icon": "images/icon_40pt.png",
+        "default_popup": "popup.html"
+    },
+    "options_page": "options.html",
+    "background": {
+        "scripts": ["eventPage.js"],
+        "persistent": false
+    },
+    "permissions": [
+        "storage",
+        "contextMenus"
+    ]
+}
