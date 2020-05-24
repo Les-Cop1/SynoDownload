@@ -1,15 +1,16 @@
 <?php
 header("Access-Control-Allow-Origin: *");
-if (isset($_GET['method']) && $_SERVER['REQUEST_METHOD'] == "GET") {
+
+if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $result = array();
     $result['success'] = true;
-    if ($_GET['method'] == "list") {
+    if ($_POST['method'] == "list") {
         $result['success'] = false;
 
-        $username = $_GET['username'];
-        $password = $_GET['password'];
-        $protocol = $_GET['protocol'];
-        $ip = $_GET['ip'];
+        $username = $_POST['username'];
+        $password = $_POST['password'];
+        $protocol = $_POST['protocol'];
+        $ip = $_POST['ip'];
         $url = $protocol . "://" . $ip;
 
         $login = login($url, $username, $password);
@@ -26,14 +27,14 @@ if (isset($_GET['method']) && $_SERVER['REQUEST_METHOD'] == "GET") {
         }
 
 
-    } else if ($_GET['method'] == "download") {
+    } else if ($_POST['method'] == "download") {
         $result['success'] = false;
 
-        $username = $_GET['username'];
-        $password = $_GET['password'];
-        $protocol = $_GET['protocol'];
-        $link = $_GET['link'];
-        $ip = $_GET['ip'];
+        $username = $_POST['username'];
+        $password = $_POST['password'];
+        $protocol = $_POST['protocol'];
+        $link = $_POST['link'];
+        $ip = $_POST['ip'];
         $url = $protocol . "://" . $ip;
         $destination = null;
 
@@ -48,22 +49,22 @@ if (isset($_GET['method']) && $_SERVER['REQUEST_METHOD'] == "GET") {
             $result['success'] = false;
         }
 
-    } else if ($_GET['method'] == "delete") {
+    } else if ($_POST['method'] == "delete") {
         $result['method'] = "delete";
 
-    } else if ($_GET['method'] == "pause") {
+    } else if ($_POST['method'] == "pause") {
         $result['method'] = "pause";
 
-    } else if ($_GET['method'] == "resume") {
+    } else if ($_POST['method'] == "resume") {
         $result['method'] = "resume";
 
-    } else if ($_GET['method'] == "status") {
+    } else if ($_POST['method'] == "status") {
         $error = false;
 
-        $username = $_GET['username'];
-        $password = $_GET['password'];
-        $protocol = $_GET['protocol'];
-        $ip = $_GET['ip'];
+        $username = $_POST['username'];
+        $password = $_POST['password'];
+        $protocol = $_POST['protocol'];
+        $ip = $_POST['ip'];
         $url = $protocol . "://" . $ip;
 
         $login = login($url, $username, $password);

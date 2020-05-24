@@ -54,13 +54,26 @@ chrome.contextMenus.onClicked.addListener(function(clickData){
                                         protocol = data2.synology.protocol
                                     }
 
+                                    var form = new FormData();
+                                    form.append("method", "download");
+                                    form.append("username", encodeURI(username));
+                                    form.append("password", encodeURI(password));
+                                    form.append("protocol", protocol);
+                                    form.append("ip", host);
+                                    form.append("link", response2.data.link);
+
                                     var settings = {
-                                        "url": "http://" + nasURL + ":500/?method=download&username=" + encodeURI(username) + "&password=" + encodeURI(password) + "&protocol=" + protocol + "&ip=" + host + "&link=" + response2.data.link,
-                                        "method": "GET",
-                                        "timeout": 0
+                                        "url": "http://" + nasURL + ":500",
+                                        "method": "POST",
+                                        "timeout": 0,
+                                        "processData": false,
+                                        "mimeType": "multipart/form-data",
+                                        "contentType": false,
+                                        "data": form
                                     };
 
                                     $.ajax(settings).done(function (response3) {
+                                        console.log("Téléchargment")
                                         chrome.storage.sync.get('nbDownloads', function (data3) {
                                             chrome.storage.sync.set({
                                                 nbDownloads: data3.nbDownloads + 1
@@ -89,3 +102,5 @@ chrome.storage.onChanged.addListener(function (changes, storageName) {
         }
     }
 })
+
+

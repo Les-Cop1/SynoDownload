@@ -68,10 +68,24 @@ $(function () {
 
         let nasURL = host.split(':')[0];
 
+        var form = new FormData();
+        form.append("method", "status");
+        form.append("username", encodeURI(username));
+        form.append("password", encodeURI(password));
+        form.append("protocol", protocol);
+        form.append("ip", host);
+
         var settings = {
-            "url": "http://" + nasURL + ":500/?method=status&username=" + encodeURI(username) + "&password=" + encodeURI(password) + "&protocol=" + protocol + "&ip=" + host,
-            "method": "GET",
-            "timeout": 0
+            "url": "http://" + nasURL + ":500/",
+            "method": "POST",
+            "timeout": 0,
+            "headers": {
+                "Cookie": "smid=DC_fjk7JTDu4KC8WwBYzpu62SbOA4nJcW-Ejmh60twut_PhKBbIApXy7fsXxQ9RKhtpQrHgkt-NQdu0kEaDn9A; id=JGQl6xTFiP7Tg18B0Q8N652500"
+            },
+            "processData": false,
+            "mimeType": "multipart/form-data",
+            "contentType": false,
+            "data": form
         };
 
         $.ajax(settings).done(function (response) {
