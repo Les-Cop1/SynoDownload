@@ -69,7 +69,7 @@ $(function () {
         let nasURL = host.split(':')[0];
 
         var settings = {
-            "url": "http://" + nasURL + ":500/?method=status&username=" + username + "&password=" + password + "&protocol=" + protocol + "&ip=" + host,
+            "url": "http://" + nasURL + ":500/?method=status&username=" + encodeURI(username) + "&password=" + encodeURI(password) + "&protocol=" + protocol + "&ip=" + host,
             "method": "GET",
             "timeout": 0
         };
@@ -107,7 +107,7 @@ $(function () {
         })
 
         var settings = {
-            "url": "https://api.alldebrid.com/v4/user?agent=SynoDownload&apikey=" + apikey,
+            "url": "https://api.alldebrid.com/v4/user?agent=SynoDownload&apikey=" + encodeURI(apikey),
             "method": "GET",
             "timeout": 0
         };

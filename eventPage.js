@@ -17,7 +17,7 @@ chrome.contextMenus.onClicked.addListener(function(clickData){
             }
 
             var settings = {
-                "url": "https://api.alldebrid.com/v4/link/redirector?agent=SynoDownload&link=" + clickData.linkUrl + "&apikey=" + apikey,
+                "url": "https://api.alldebrid.com/v4/link/redirector?agent=SynoDownload&link=" + clickData.linkUrl + "&apikey=" + encodeURI(apikey),
                 "method": "GET",
                 "timeout": 0
             };
@@ -26,7 +26,7 @@ chrome.contextMenus.onClicked.addListener(function(clickData){
                 if (response.status === "success") {
                     for (let i = 0; i < response.data.links.length; i++) {
                         var settings = {
-                            "url": "https://api.alldebrid.com/v4/link/unlock?agent=SynoDownload&link=" + response.data.links[i] + "&apikey=" + apikey,
+                            "url": "https://api.alldebrid.com/v4/link/unlock?agent=SynoDownload&link=" + response.data.links[i] + "&apikey=" + encodeURI(apikey),
                             "method": "GET",
                             "timeout": 0
                         };
@@ -55,7 +55,7 @@ chrome.contextMenus.onClicked.addListener(function(clickData){
                                     }
 
                                     var settings = {
-                                        "url": "http://" + nasURL + ":500/?method=download&username=" + username + "&password=" + password + "&protocol=" + protocol + "&ip=" + host + "&link=" + response2.data.link,
+                                        "url": "http://" + nasURL + ":500/?method=download&username=" + encodeURI(username) + "&password=" + encodeURI(password) + "&protocol=" + protocol + "&ip=" + host + "&link=" + response2.data.link,
                                         "method": "GET",
                                         "timeout": 0
                                     };

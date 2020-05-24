@@ -22,7 +22,7 @@ $(function(){
         }
 
         var settings = {
-            "url": "http://" + nasURL + ":500/?method=list&username=" + username + "&password=" + password + "&protocol=" + protocol + "&ip=" + host,
+            "url": "http://" + nasURL + ":500/?method=list&username=" + encodeURI(username) + "&password=" + encodeURI(password) + "&protocol=" + protocol + "&ip=" + host,
             "method": "GET",
             "timeout": 0
         };
