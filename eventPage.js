@@ -55,7 +55,7 @@ chrome.contextMenus.onClicked.addListener(function(clickData){
                                     }
 
                                     var settings = {
-                                        "url": protocol + "://" + nasURL + ":500/?method=download&username=" + username + "&password=" + password + "&protocol=" + protocol + "&ip=" + host + "&link=" + response2.data.link,
+                                        "url": "http://" + nasURL + ":500/?method=download&username=" + username + "&password=" + password + "&protocol=" + protocol + "&ip=" + host + "&link=" + response2.data.link,
                                         "method": "GET",
                                         "timeout": 0
                                     };
