@@ -84,6 +84,8 @@ chrome.storage.onChanged.addListener(function (changes, storageName) {
         if (nbDownloads > 0) {
             chrome.browserAction.setBadgeText({"text": nbDownloads })
             chrome.browserAction.setBadgeBackgroundColor({"color": "#4f79ff" })
+        } else {
+            chrome.browserAction.setBadgeText({"text": "" })
         }
     }
 })
