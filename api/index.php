@@ -50,7 +50,28 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         }
 
     } else if ($_POST['method'] == "delete") {
-        $result['method'] = "delete";
+        $result['success'] = false;
+
+        $username = $_POST['username'];
+        $password = $_POST['password'];
+        $protocol = $_POST['protocol'];
+        $protocol = $_POST['protocol'];
+        $id = $_POST['id'];
+        $ip = $_POST['ip'];
+        $url = $protocol . "://" . $ip;
+
+        $login = login($url, $username, $password);
+
+        if ($login['success']) {
+            $cookies = $login['cookies'];
+            $result['success'] = delete($url, $id, $cookies);
+
+            logout($url);
+        } else {
+            $result['success'] = false;
+        }
+
+
 
     } else if ($_POST['method'] == "pause") {
         $result['method'] = "pause";
@@ -204,4 +225,29 @@ function download($url, $username, $password, $downloadLink, $destination, $cook
     curl_close($curl);
     return $response['success'];
 
+}
+
+function delete($url, $id, $cookies) {
+    $curl = curl_init();
+
+    $cookieText = "Cookie: smid=" . $cookies['smid'] . "; id=" . $cookies['id'];
+
+    curl_setopt_array($curl, array(
+        CURLOPT_URL => $url . "/webapi/DownloadStation/task.cgi?api=SYNO.DownloadStation.Task&version=1&method=delete&id=" . $id,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => "",
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => "GET",
+        CURLOPT_HTTPHEADER => array(
+            $cookieText
+        ),
+    ));
+
+    $response = curl_exec($curl);
+
+    curl_close($curl);
+    return json_decode($response, true)['success'];
 }

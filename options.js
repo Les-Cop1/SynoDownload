@@ -79,9 +79,6 @@ $(function () {
             "url": "http://" + nasURL + ":500/",
             "method": "POST",
             "timeout": 0,
-            "headers": {
-                "Cookie": "smid=DC_fjk7JTDu4KC8WwBYzpu62SbOA4nJcW-Ejmh60twut_PhKBbIApXy7fsXxQ9RKhtpQrHgkt-NQdu0kEaDn9A; id=JGQl6xTFiP7Tg18B0Q8N652500"
-            },
             "processData": false,
             "mimeType": "multipart/form-data",
             "contentType": false,

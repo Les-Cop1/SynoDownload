@@ -3,7 +3,7 @@ document.writeln('<script src="./node_modules/jquery/dist/jquery.min.js"></scrip
 var contextMenuItem = {
     "id": "download",
     "title": "Télécharger sur le NAS",
-    "contexts": ["selection"]
+    "contexts": ["link", "selection"]
 }
 chrome.contextMenus.create(contextMenuItem);
 chrome.contextMenus.onClicked.addListener(function(clickData){
