@@ -115,7 +115,7 @@ function login($url, $username, $password) {
     $curl = curl_init();
 
     curl_setopt_array($curl, array(
-        CURLOPT_URL => $url . "/webapi/auth.cgi?api=SYNO.API.Auth&version=2&method=login&account=" . $username . "&passwd=" . $password . "&session=DownloadStation&format=cookie",
+        CURLOPT_URL => $url . "/webapi/auth.cgi?api=SYNO.API.Auth&version=2&method=login&account=" . urlencode($username) . "&passwd=" . urlencode($password) . "&session=DownloadStation&format=cookie",
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => "",
         CURLOPT_MAXREDIRS => 10,
@@ -207,7 +207,7 @@ function download($url, $username, $password, $downloadLink, $destination, $cook
     $cookieText = "Cookie: smid=" . $cookies['smid'] . "; id=" . $cookies['id'];
 
     curl_setopt_array($curl, array(
-        CURLOPT_URL => $url . "/webapi/DownloadStation/task.cgi?api=SYNO.DownloadStation.Task&version=1&method=create&username=" . $username . "&password=" . $password . "&uri=" . $downloadLink . $destination,
+        CURLOPT_URL => $url . "/webapi/DownloadStation/task.cgi?api=SYNO.DownloadStation.Task&version=1&method=create&username=" . urlencode($username) . "&password=" . urlencode($password) . "&uri=" . $downloadLink . $destination,
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => "",
         CURLOPT_MAXREDIRS => 10,

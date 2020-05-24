@@ -70,8 +70,8 @@ $(function () {
 
         var form = new FormData();
         form.append("method", "status");
-        form.append("username", encodeURI(username));
-        form.append("password", encodeURI(password));
+        form.append("username", username);
+        form.append("password", password);
         form.append("protocol", protocol);
         form.append("ip", host);
 
