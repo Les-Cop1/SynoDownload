@@ -169,6 +169,104 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         }
 
 
+    } else if ($_POST['method'] == "listFolder") {
+        $result['success'] = false;
+
+        $username = $_POST['username'];
+        $password = $_POST['password'];
+        $protocol = $_POST['protocol'];
+        $folder = $_POST['folder'];
+        $ip = $_POST['ip'];
+        $url = $protocol . "://" . $ip;
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => $url . "/webapi/auth.cgi?api=SYNO.API.Auth&version=3&method=login&account=" . urlencode($username) . "&passwd=" . urlencode($password) . "&session=FileStation&format=cookie",
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "GET",
+            CURLOPT_HEADER => 1
+        ));
+
+        $response = curl_exec($curl);
+        preg_match_all('/^Set-Cookie:\s*([^;]*)/mi', $response, $matches);
+        $cookies = array();
+
+        foreach($matches[1] as $item) {
+            parse_str($item, $cookie);
+            $cookies = array_merge($cookies, $cookie);
+        }
+        $login = array("cookies" => $cookies);
+        curl_close($curl);
+        if (count($login['cookies']) > 0) {
+            $login['success'] = true;
+        } else {
+            $login['success'] = false;
+        }
+
+
+        if ($login['success']) {
+            $cookies = $login['cookies'];
+
+            $curl = curl_init();
+
+            $cookieText = "Cookie: smid=" . $cookies['smid'] . "; id=" . $cookies['id'];
+
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => $url . "/webapi/entry.cgi?api=SYNO.FileStation.List&version=1&method=list&folder_path=/homes/plex/Medias/" . urlencode($folder),
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => "",
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => "GET",
+                CURLOPT_HTTPHEADER => array(
+                    $cookieText
+                ),
+            ));
+
+            $response = curl_exec($curl);
+            $response = json_decode($response, true);
+            curl_close($curl);
+
+            $result["success"] = $response["success"];
+
+            if ($result["success"]) {
+                $result["folders"] = array();
+                for ($i = 0; $i < count($response["data"]["files"]); $i++) {
+                    if ($response["data"]["files"][$i]["isdir"]){
+                        array_push($result["folders"], $response["data"]["files"][$i]);
+                    }
+                }
+            }
+
+            $curl = curl_init();
+
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => $url . "/webapi/auth.cgi?api=SYNO.API.Auth&version=1&method=logout&session=DownloadStation",
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => "",
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => "GET"
+            ));
+
+            $response = json_decode(curl_exec($curl), true);
+
+            curl_close($curl);
+        } else {
+            $result['success'] = false;
+        }
+
+
     }
 } else {
     $result = array("Erreur" => "Requete incorrecte");
