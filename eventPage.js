@@ -93,6 +93,7 @@ chrome.contextMenus.onClicked.addListener(function(clickData){
 
 chrome.storage.onChanged.addListener(function (changes, storageName) {
     if (changes.nbDownloads !== undefined) {
+        console.log("Changement d'icone")
         nbDownloads = changes.nbDownloads.newValue.toString()
         if (nbDownloads > 0) {
             chrome.browserAction.setBadgeText({"text": nbDownloads })
@@ -102,5 +103,4 @@ chrome.storage.onChanged.addListener(function (changes, storageName) {
         }
     }
 })
-
 

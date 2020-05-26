@@ -1,5 +1,9 @@
 $(function(){
 
+    chrome.storage.sync.get('tasks', function (data) {
+        if (data.tasks !== undefined) setItems(data.tasks)
+    })
+
     chrome.storage.sync.get('synology', function (data) {
         var host = ""
         var username = ""
@@ -37,65 +41,15 @@ $(function(){
             "contentType": false,
             "data": form
         };
+        let time = 30000
+        chrome.storage.sync.get('reloadTime', function (data) {
 
-
-        $.ajax(settings).done(function (response) {
-            if (response.success) {
-                let nbDownloads = response.tasks.length
-                chrome.storage.sync.set({
-                    nbDownloads: nbDownloads
-                })
-
-                if (nbDownloads > 1) {
-                    $("#nbDownloads").text(nbDownloads + " téléchargements en cours")
-                } else {
-                    $("#nbDownloads").text(nbDownloads + " téléchargement en cours")
-                }
-
-
-                let list = $("#listItems")
-                list.empty()
-
-                response.tasks.forEach(function (task) {
-                    console.log(task)
-                    let playPause
-                    if (task.status === "paused") {
-                        playPause = '<button type="button" class="btn btn-sm btn-outline-success" id="play' + task.id + '" >\n' +
-                            '                                <i class="fas fa-play"></i>\n'
-                    } else if (task.status === "downloading") {
-                        playPause = '<button type="button" class="btn btn-sm btn-outline-warning" id="pause' + task.id + '" >\n' +
-                            '                                <i class="fas fa-pause"></i>\n'
-                    } else if (task.status === "finished") {
-                        playPause = ""
-                    } else if (task.status === "waiting") {
-                        playPause = ""
-                    }
-
-                    list.append('<li class="list-group-item">\n' +
-                        '                    <div class="row">\n' +
-                        '                        <div class="col">\n' +
-                        '                            ' + task.title + '\n' +
-                        '                        </div>\n' +
-                        '                        <div class="col-2" style="text-align: right">\n' +
-                        playPause +
-                        '                            </button>\n' +
-                        '                            <button type="button" class="btn btn-sm btn-outline-danger" id="cancel' + task.id + '" >\n' +
-                        '                                <i class="fas fa-stop"></i>\n' +
-                        '                            </button>\n' +
-                        '                        </div>\n' +
-                        '                    </div>\n' +
-                        '                </li>')
-
-                    let cancelButton = $("#cancel" + task.id)
-                    let pauseButton = $("#pause" + task.id)
-                    let resumeButton = $("#resume" + task.id)
-
-                    cancelButton.bind('click', cancelDownload(cancelButton, task.id))
-                    pauseButton.bind('click', pauseDownload(pauseButton, task.id))
-                    resumeButton.bind('click', resumeDownload(resumeButton, task.id))
-                })
+            if (data.reloadTime !== undefined) {
+                time = data.reloadTime * 1000
             }
-        });
+            loadData(settings)
+            setInterval(loadData, time, settings)
+        })
     })
 })
 
@@ -123,8 +77,6 @@ function pauseDownload(element, id) {
         if (data.synology.protocol) {
             protocol = data.synology.protocol
         }
-
-        console.log("import des données")
 
         var form = new FormData();
         form.append("method", "delete");
@@ -174,8 +126,6 @@ function cancelDownload(element, id) {
         if (data.synology.protocol) {
             protocol = data.synology.protocol
         }
-
-        console.log("import des données")
 
         var form = new FormData();
         form.append("method", "delete");
@@ -227,7 +177,6 @@ function resumeDownload(element, id) {
             protocol = data.synology.protocol
         }
 
-        console.log("import des données")
 
         var form = new FormData();
         form.append("method", "delete");
@@ -250,5 +199,88 @@ function resumeDownload(element, id) {
         $.ajax(settings).done(function (response) {
             console.log("En téléchargement");
         });
+    })
+}
+
+function setItems(tasks) {
+    let list = $("#listItems")
+    list.empty()
+
+    tasks.forEach(function (task) {
+        let playPause
+        if (task.status === "paused") {
+            playPause = '<button type="button" class="btn btn-sm btn-outline-success" id="play' + task.id + '" >\n' +
+                '                                <i class="fas fa-play"></i>\n'
+        } else if (task.status === "downloading") {
+            playPause = '<button type="button" class="btn btn-sm btn-outline-warning" id="pause' + task.id + '" >\n' +
+                '                                <i class="fas fa-pause"></i>\n'
+        } else if (task.status === "finished") {
+            playPause = ""
+        } else if (task.status === "waiting") {
+            playPause = ""
+        }
+
+        list.append('<li class="list-group-item">\n' +
+            '                    <div class="row">\n' +
+            '                        <div class="col">\n' +
+            '                            ' + task.title + '\n' +
+            '                        </div>\n' +
+            '                        <div class="col-2" style="text-align: right">\n' +
+            playPause +
+            '                            </button>\n' +
+            '                            <button type="button" class="btn btn-sm btn-outline-danger" id="cancel' + task.id + '" >\n' +
+            '                                <i class="fas fa-stop"></i>\n' +
+            '                            </button>\n' +
+            '                        </div>\n' +
+            '                    </div>\n' +
+            '                </li>')
+
+        /*
+        let cancelButton = $("#cancel" + task.id)
+        let pauseButton = $("#pause" + task.id)
+        let resumeButton = $("#resume" + task.id)
+
+        cancelButton.bind('click', cancelDownload(cancelButton, task.id))
+        pauseButton.bind('click', pauseDownload(pauseButton, task.id))
+        resumeButton.bind('click', resumeDownload(resumeButton, task.id))
+        */
+    })
+}
+
+function loadData(settings) {
+    console.log("Chargement")
+    let divNbDownload = $("#nbDownloads")
+
+    divNbDownload.empty()
+    divNbDownload.append('<div class="spinner-grow spinner-grow-sm" role="status">\n' +
+        '                    <span class="sr-only">Loading...</span>\n' +
+        '                </div>')
+
+    $.ajax(settings).done(function (response) {
+        response = JSON.parse(response)
+        if (response.success) {
+            let nbDownloads = response.tasks.length
+
+            chrome.storage.sync.set({
+                nbDownloads: nbDownloads,
+                tasks: response.tasks
+            })
+
+
+            divNbDownload.empty()
+
+            if (nbDownloads > 1) {
+                divNbDownload.append('<span class="navbar-text" id="nbDownloads">\n' +
+                    '                ' + nbDownloads + ' téléchargements en cours\n' +
+                    '            </span>')
+            } else {
+                divNbDownload.append('<span class="navbar-text" id="nbDownloads">\n' +
+                    '                ' + nbDownloads + ' téléchargement en cours\n' +
+                    '            </span>')
+            }
+
+            setItems(response.tasks)
+
+        }
     })
 }

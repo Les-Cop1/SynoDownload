@@ -20,9 +20,11 @@
                 <img src="./images/icon_29pt.png" width="29" height="29" class="d-inline-block align-top" alt="logo">
                 SynoDownload
             </a>
-            <span class="navbar-text" id="nbDownloads">
-                0 téléchargement en cours
-            </span>
+            <div id="nbDownloads">
+                <div class="spinner-grow spinner-grow-sm" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </div>
         </nav>
         <div id="root" class="root" style="padding: 10px;">
             <ul class="list-group" id="listItems">

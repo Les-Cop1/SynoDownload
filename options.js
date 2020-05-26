@@ -35,6 +35,16 @@ $(function () {
         $("#apikey").val(apikey)
     })
 
+    chrome.storage.sync.get('reloadTime', function (data) {
+        var time = ""
+
+        if (data.reloadTime) {
+            time = data.reloadTime
+        }
+
+        $("#time option[value=" + time + "]").prop('selected', true);
+    })
+
     $('#submitSynology').click(function () {
 
         chrome.storage.sync.set({
@@ -135,5 +145,14 @@ $(function () {
                 button.addClass("btn-danger")
             }
         });
+    })
+
+    $('#time').change(function () {
+
+        let time = $("#time").val()
+
+        chrome.storage.sync.set({
+            'reloadTime': time
+        })
     })
 })

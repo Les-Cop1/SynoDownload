@@ -22,9 +22,9 @@
             SynoDownload
         </a>
     </nav>
-    <div id="root" class="root" style="padding: 10px;">
+    <div id="root" class="root container-fluid">
         <div class="row">
-            <div class="col">
+            <div class="col" style="min-width: 240px; margin-top: 10px">
                 <div class="card">
                     <h5 class="card-header">Synology</h5>
                     <div class="card-body">
@@ -62,7 +62,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col">
+            <div class="col" style="min-width: 240px; margin-top: 10px">
                 <div class="card">
                     <h5 class="card-header">AllDebrid</h5>
                     <div class="card-body">
@@ -77,6 +77,27 @@
                         </form>
                     </div>
                 </div>
+            </div>
+
+            <div class="col" style="min-width: 240px; margin-top: 10px">
+                <div class="card">
+                    <h5 class="card-header">Rafraichissement</h5>
+                    <div class="card-body">
+                        <form>
+                            <div class="form-group">
+                                <label for="time">Temps en secondes</label>
+                                <select class="form-control" id="time">
+                                    <option value="10">10</option>
+                                    <option value="20">20</option>
+                                    <option value="30">30</option>
+                                    <option value="60">60</option>
+                                    <option value="120">120</option>
+                                </select>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
             </div>
         </div>
 
