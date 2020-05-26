@@ -46,7 +46,7 @@ $(function () {
             }
         })
         let button = $('#submitSynology')
-        button.removeClass("btn-light")
+        button.removeClass("btn-primary")
         button.addClass("btn-success")
     })
 
@@ -88,6 +88,7 @@ $(function () {
         $.ajax(settings).done(function (response) {
             response = JSON.parse(response)
             let button = $('#testSynology')
+            button.removeClass("btn-outline-primary")
             if (response.success) {
                 button.removeClass("btn-danger")
                 button.addClass("btn-success")
@@ -105,7 +106,7 @@ $(function () {
         })
 
         let button = $('#submitAllDebrid')
-        button.removeClass("btn-light")
+        button.removeClass("btn-primary")
         button.addClass("btn-success")
     })
 
@@ -125,6 +126,7 @@ $(function () {
 
         $.ajax(settings).done(function (response) {
             let button = $('#testAllDebird')
+            button.removeClass("btn-outline-primary")
             if (response.status === "success") {
                 button.removeClass("btn-danger")
                 button.addClass("btn-success")
