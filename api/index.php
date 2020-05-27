@@ -169,6 +169,29 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         }
 
 
+    } else if ($_POST['method'] == "detailDownload") {
+        $result['success'] = false;
+
+        $username = $_POST['username'];
+        $password = $_POST['password'];
+        $protocol = $_POST['protocol'];
+        $id = $_POST['id'];
+        $ip = $_POST['ip'];
+        $url = $protocol . "://" . $ip;
+
+
+        $login = login($url, $username, $password);
+
+        if ($login['success']) {
+            $cookies = $login['cookies'];
+            $result['success'] = infosDownload($url, $id, $cookies);
+
+            logout($url);
+        } else {
+            $result['success'] = false;
+        }
+
+
     } else if ($_POST['method'] == "listFolder") {
         $result['success'] = false;
 
@@ -342,6 +365,9 @@ function logout($url){
 
 
 function listDownloads($url, $cookies) {
+    $returnArray = array();
+    $returnArray['success'] = false;
+
     $curl = curl_init();
 
     $cookieText = "Cookie: smid=" . $cookies['smid'] . "; id=" . $cookies['id'];
@@ -363,13 +389,49 @@ function listDownloads($url, $cookies) {
     $response = curl_exec($curl);
     $response = json_decode($response, true);
     curl_close($curl);
+    $returnArray['success'] = $response['success'];
 
-    if ($response['success'] == false) {
-        return array("success"=>false);
-    } else {
 
-        return array("success" => true, "tasks" => $response['data']['tasks']);
+    if ($returnArray['success']) {
+        $returnArray['tasks'] = array();
+        $ids = "";
+        foreach ($response['data']['tasks'] as $task) {
+            if (strlen($ids) > 0) {
+                $ids .= "," . $task['id'];
+            } else {
+                $ids = $task['id'];
+            }
+        }
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => $url . "/webapi/DownloadStation/task.cgi?api=SYNO.DownloadStation.Task&version=1&method=getinfo&id=" . $ids . "&additional=transfer",
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "GET",
+            CURLOPT_HTTPHEADER => array(
+                $cookieText
+            ),
+        ));
+
+        $response2 = json_decode(curl_exec($curl), true);
+
+        curl_close($curl);
+
+        $returnArray['success'] = $response2['success'];
+
+        if ($returnArray['success']) {
+            $returnArray['tasks'] = $response2['data']['tasks'];
+        }
+
     }
+
+    return $returnArray;
 }
 
 

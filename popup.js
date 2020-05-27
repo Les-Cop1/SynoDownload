@@ -220,10 +220,11 @@ function setItems(tasks) {
             playPause = ""
         }
 
+        console.log(task.additional.transfer.size_downloaded)
         list.append('<li class="list-group-item">\n' +
             '                    <div class="row">\n' +
             '                        <div class="col">\n' +
-            '                            ' + task.title + '\n' +
+            '                            ' + task.title + ' ' + getSize(task.size) + '\n' +
             '                        </div>\n' +
             '                        <div class="col-2" style="text-align: right">\n' +
             playPause +
@@ -245,6 +246,21 @@ function setItems(tasks) {
         resumeButton.bind('click', resumeDownload(resumeButton, task.id))
         */
     })
+}
+
+function getSize(size) {
+    let unit, roundValue
+    if (size >= 1000000000) {
+        unit = "GB"
+        roundValue = Math.round(size / 10000000)/100
+    } else {
+        unit = "MB"
+        roundValue = Math.round(size / 10000)/100
+    }
+
+
+
+    return roundValue + unit
 }
 
 function loadData(settings) {
