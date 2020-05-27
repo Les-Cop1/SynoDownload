@@ -1,4 +1,4 @@
-$(function(){
+$(function () {
 
     chrome.storage.sync.get('tasks', function (data) {
         if (data.tasks !== undefined) setItems(data.tasks)
@@ -220,11 +220,22 @@ function setItems(tasks) {
             playPause = ""
         }
 
-        console.log(task.additional.transfer.size_downloaded)
+        let size_downloaded = task.additional.transfer.size_downloaded;
+        let size_total = task.size;
+        let pourcent = Math.round((size_downloaded * 100) / size_total);
+
+
+        let title = formatTitre(task.title)
+
         list.append('<li class="list-group-item">\n' +
             '                    <div class="row">\n' +
             '                        <div class="col">\n' +
-            '                            ' + task.title + ' ' + getSize(task.size) + '\n' +
+            '                           <p>\n' +
+            '                            ' + title + '\n' +
+            '                           </p>\n' +
+            '                           <div class="progress"  style="margin-top:15px">\n' +
+            '                               <div class="progress-bar" role="progressbar" style="width: ' + pourcent + '%;" aria-valuenow="' + pourcent + '" aria-valuemin="0" aria-valuemax="100">' + pourcent + '%</div>\n' +
+            '                           </div>\n' +
             '                        </div>\n' +
             '                        <div class="col-2" style="text-align: right">\n' +
             playPause +
@@ -252,15 +263,22 @@ function getSize(size) {
     let unit, roundValue
     if (size >= 1000000000) {
         unit = "GB"
-        roundValue = Math.round(size / 10000000)/100
+        roundValue = Math.round(size / 10000000) / 100
     } else {
         unit = "MB"
-        roundValue = Math.round(size / 10000)/100
+        roundValue = Math.round(size / 10000) / 100
     }
 
-
-
     return roundValue + unit
+}
+
+function formatTitre(title) {
+    title = title.replace(/\./g, ' ')
+    title = title.split('')
+    title.splice(title.lastIndexOf(' '), 1, '.')
+    title = title.join('')
+
+    return title
 }
 
 function loadData(settings) {

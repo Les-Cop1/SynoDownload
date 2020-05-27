@@ -13,8 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         $password = $_POST['password'];
         $protocol = $_POST['protocol'];
         $ip = $_POST['ip'];
-        $url = $protocol . "://" . $ip;
-
+        $url ="http://localhost:81";
         $login = login($url, $username, $password);
 
         if ($login['success']) {
@@ -37,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         $protocol = $_POST['protocol'];
         $link = $_POST['link'];
         $ip = $_POST['ip'];
-        $url = $protocol . "://" . $ip;
+        $url ="http://localhost:81";
         $destination = null;
 
         $login = login($url, $username, $password);
@@ -60,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         $protocol = $_POST['protocol'];
         $id = $_POST['id'];
         $ip = $_POST['ip'];
-        $url = $protocol . "://" . $ip;
+        $url ="http://localhost:81";
 
 
         $login = login($url, $username, $password);
@@ -84,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         $protocol = $_POST['protocol'];
         $id = $_POST['id'];
         $ip = $_POST['ip'];
-        $url = $protocol . "://" . $ip;
+        $url ="http://localhost:81";
 
 
         $login = login($url, $username, $password);
@@ -107,7 +106,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         $protocol = $_POST['protocol'];
         $id = $_POST['id'];
         $ip = $_POST['ip'];
-        $url = $protocol . "://" . $ip;
+        $url ="http://localhost:81";
 
 
         $login = login($url, $username, $password);
@@ -129,7 +128,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         $password = $_POST['password'];
         $protocol = $_POST['protocol'];
         $ip = $_POST['ip'];
-        $url = $protocol . "://" . $ip;
+        $url ="http://localhost:81";
 
         $login = login($url, $username, $password);
 
@@ -154,7 +153,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         $id = $_POST['id'];
         $ip = $_POST['ip'];
         $destination = "homes/plex/Medias/" . $_POST['destination'];
-        $url = $protocol . "://" . $ip;
+        $url ="http://localhost:81";
 
 
         $login = login($url, $username, $password);
@@ -177,7 +176,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         $protocol = $_POST['protocol'];
         $id = $_POST['id'];
         $ip = $_POST['ip'];
-        $url = $protocol . "://" . $ip;
+        $url ="http://localhost:81";
 
 
         $login = login($url, $username, $password);
@@ -200,7 +199,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         $protocol = $_POST['protocol'];
         $folder = $_POST['folder'];
         $ip = $_POST['ip'];
-        $url = $protocol . "://" . $ip;
+        $url ="http://localhost:81";
 
         $curl = curl_init();
 
