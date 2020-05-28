@@ -62,6 +62,12 @@ $(function () {
 
     $('#testSynology').click(function () {
 
+        let button = $('#testSynology')
+
+        button.empty()
+        button.append('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>\n' +
+            '  Chargement...')
+
         var host = $("#host").val()
         var username = $("#username").val()
         var password = $("#password").val()
@@ -97,12 +103,18 @@ $(function () {
 
         $.ajax(settings).done(function (response) {
             response = JSON.parse(response)
-            let button = $('#testSynology')
             button.removeClass("btn-outline-primary")
+
+            console.log('Résultat : ' + response.success)
+
+            button.empty()
+
             if (response.success) {
+                button.append('Succès')
                 button.removeClass("btn-danger")
                 button.addClass("btn-success")
             } else {
+                button.append('Erreur')
                 button.removeClass("btn-success")
                 button.addClass("btn-danger")
             }
@@ -124,6 +136,11 @@ $(function () {
 
         var apikey = $("#apikey").val()
 
+        let button = $('#testAllDebird')
+        button.empty()
+        button.append('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>\n' +
+            '  Chargement...')
+
         chrome.storage.sync.set({
             'alldebrid': apikey
         })
@@ -135,12 +152,20 @@ $(function () {
         };
 
         $.ajax(settings).done(function (response) {
-            let button = $('#testAllDebird')
+
             button.removeClass("btn-outline-primary")
+
+            console.log('Résultat : ' + response.status)
+
+            button.empty()
+
+
             if (response.status === "success") {
+                button.append('Succès')
                 button.removeClass("btn-danger")
                 button.addClass("btn-success")
             } else {
+                button.append('Erreur')
                 button.removeClass("btn-success")
                 button.addClass("btn-danger")
             }
