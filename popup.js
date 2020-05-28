@@ -223,6 +223,8 @@ function setItems(tasks) {
         let size_downloaded = task.additional.transfer.size_downloaded;
         let size_total = task.size;
         let pourcent = Math.round((size_downloaded * 100) / size_total);
+        if (isNaN(pourcent))
+            pourcent=0;
 
 
         let title = formatTitre(task.title)
