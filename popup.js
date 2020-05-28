@@ -1,5 +1,9 @@
 $(function () {
 
+    $(document).ready( function() {
+        $("#modalFolder_div").load("ModalFolder.html");
+    });
+
     chrome.storage.sync.get('tasks', function (data) {
         if (data.tasks !== undefined) setItems(data.tasks)
     })
@@ -208,23 +212,28 @@ function setItems(tasks) {
 
     tasks.forEach(function (task) {
         let playPause
-        if (task.status === "paused") {
+        if (task.status === "paused" || 3) {
             playPause = '<button type="button" class="btn btn-sm btn-outline-success" id="play' + task.id + '" >\n' +
                 '                                <i class="fas fa-play"></i>\n'
-        } else if (task.status === "downloading") {
+        } else if (task.status === "downloading" || 2) {
             playPause = '<button type="button" class="btn btn-sm btn-outline-warning" id="pause' + task.id + '" >\n' +
                 '                                <i class="fas fa-pause"></i>\n'
-        } else if (task.status === "finished") {
-            playPause = ""
-        } else if (task.status === "waiting") {
-            playPause = ""
+        } else if (task.status === "finished" || 5) {
+            playPause = '<button type="button" class="btn btn-sm btn-outline-primary" id="finished' + task.id + '" >\n' +
+                '                                <i class="fas flag-checkered"></i>\n'
+        } else if (task.status === "waiting" || 1) {
+            playPause = '<button type="button" class="btn btn-sm btn-outline-info" id="waiting' + task.id + '" >\n' +
+                '                                <i class="fas fa-hourglass-half"></i>\n'
+        } else {
+            playPause = '<button type="button" class="btn btn-sm btn-outline-dark" id="other' + task.id + '" >\n' +
+                '                                <i class="fas fa-question"></i>\n'
         }
 
         let size_downloaded = task.additional.transfer.size_downloaded;
         let size_total = task.size;
         let pourcent = Math.round((size_downloaded * 100) / size_total);
         if (isNaN(pourcent))
-            pourcent=0;
+            pourcent = 0;
 
 
         let title = formatTitre(task.title)
@@ -245,9 +254,15 @@ function setItems(tasks) {
             '                            <button type="button" class="btn btn-sm btn-outline-danger" id="cancel' + task.id + '" >\n' +
             '                                <i class="fas fa-stop"></i>\n' +
             '                            </button>\n' +
+            '                            <button type="button" class="btn btn-sm btn-outline-secondary" id="folder' + task.id + '" data-toggle="modal" data-target="#modalFolder">\n' +
+            '                                <i class="fas fa-folder"></i>\n' +
+            '                                <i class="fas fa-folder-open"></i>\n' +
+            '                            </button>\n' +
             '                        </div>\n' +
             '                    </div>\n' +
             '                </li>')
+
+
 
         /*
         let cancelButton = $("#cancel" + task.id)

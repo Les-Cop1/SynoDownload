@@ -1,35 +1,59 @@
 <!DOCTYPE html>
 <html lang="fr">
-    <head>
-        <title>SynoDownload</title>
-        <meta charset="UTF-8">
+<head>
+    <title>SynoDownload</title>
+    <meta charset="UTF-8">
 
-        <script src="./node_modules/jquery/dist/jquery.min.js"></script>
-        <script src="./node_modules/@popperjs/core/dist/umd/popper.min.js"></script>
-        <script src="./node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
-        <script src="./node_modules/@fortawesome/fontawesome-free/js/all.min.js"></script>
+    <script src="./node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="./node_modules/@popperjs/core/dist/umd/popper.min.js"></script>
+    <script src="./node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="./node_modules/@fortawesome/fontawesome-free/js/all.min.js"></script>
 
-        <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">
-        <link rel="stylesheet" href="./node_modules/@fortawesome/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./node_modules/@fortawesome/fontawesome-free/css/all.min.css">
 
-        <script src="./popup.js"></script>
-    </head>
-    <body style="min-width: 500px">
-        <nav class="navbar navbar-light bg-light">
-            <a class="navbar-brand" href="chrome-extension://kgjjnkfgdpledlonemphkckchlckgnag/options.html">
-                <img src="./images/icon_29pt.png" width="29" height="29" class="d-inline-block align-top" alt="logo">
-                SynoDownload
-            </a>
-            <div id="nbDownloads">
-                <div class="spinner-grow spinner-grow-sm" role="status">
-                    <span class="sr-only">Loading...</span>
-                </div>
-            </div>
-        </nav>
-        <div id="root" class="root" style="padding: 10px;">
-            <ul class="list-group" id="listItems">
+    <script src="./popup.js"></script>
+    <style>
+        .btn:hover .fa-folder,
+        .btn .fa-folder-open {
+            display: none;
+        }
 
-            </ul>
+        .btn:hover .fa-folder-open {
+            display: inline;
+        }
+
+        .breadcrumb > li + li:before {
+            color: #CCCCCC;
+            content: "> ";
+            padding: 0 5px;
+        }
+
+        .breadcrumb {
+            margin: 0;
+            padding: 0;
+            background-color: inherit;
+        }
+    </style>
+</head>
+<body style="min-width: 500px">
+<nav class="navbar navbar-light bg-light">
+    <a class="navbar-brand" href="chrome-extension://kgjjnkfgdpledlonemphkckchlckgnag/options.html">
+        <img src="./images/icon_29pt.png" width="29" height="29" class="d-inline-block align-top" alt="logo">
+        SynoDownload
+    </a>
+    <div id="nbDownloads">
+        <div class="spinner-grow spinner-grow-sm" role="status">
+            <span class="sr-only">Loading...</span>
         </div>
-    </body>
+    </div>
+</nav>
+
+<div id="root" class="root" style="padding: 10px;">
+    <ul class="list-group" id="listItems">
+
+    </ul>
+</div>
+<div id="modalFolder_div"></div>
+</body>
 </html>
