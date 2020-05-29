@@ -212,22 +212,72 @@ function setItems(tasks) {
 
     tasks.forEach(function (task) {
         let playPause
-        if (task.status === "paused" || 3) {
-            playPause = '<button type="button" class="btn btn-sm btn-outline-success" id="play' + task.id + '" >\n' +
-                '                                <i class="fas fa-play"></i>\n'
-        } else if (task.status === "downloading" || 2) {
-            playPause = '<button type="button" class="btn btn-sm btn-outline-warning" id="pause' + task.id + '" >\n' +
-                '                                <i class="fas fa-pause"></i>\n'
-        } else if (task.status === "finished" || 5) {
-            playPause = '<button type="button" class="btn btn-sm btn-outline-primary" id="finished' + task.id + '" >\n' +
-                '                                <i class="fas flag-checkered"></i>\n'
-        } else if (task.status === "waiting" || 1) {
-            playPause = '<button type="button" class="btn btn-sm btn-outline-info" id="waiting' + task.id + '" >\n' +
-                '                                <i class="fas fa-hourglass-half"></i>\n'
-        } else {
-            playPause = '<button type="button" class="btn btn-sm btn-outline-dark" id="other' + task.id + '" >\n' +
-                '                                <i class="fas fa-question"></i>\n'
+        let status
+
+        switch (task.status) {
+            case "waiting":
+            case "finishing":
+            case "extracting":
+            case 1:
+            case 4:
+            case 9:
+                playPause = '<button type="button" class="btn btn-sm btn-outline-info" id="waiting' + task.id + '" >\n' +
+                    '           <i class="fas fa-hourglass-half"></i>\n' +
+                    '         </button>\n'
+                break
+            case "downloading":
+            case 2:
+                playPause = '<button type="button" class="btn btn-sm btn-outline-warning" id="pause' + task.id + '" >\n' +
+                    '           <i class="fas fa-pause"></i>\n' +
+                    '        </button>\n'
+                break
+            case "paused":
+            case 3:
+                playPause = '<button type="button" class="btn btn-sm btn-outline-success" id="play' + task.id + '" >\n' +
+                    '           <i class="fas fa-play"></i>\n' +
+                    '        </button>\n'
+                break
+            default:
+                playPause = ''
         }
+
+        switch (task.status) {
+            case "waiting":
+            case 1:
+                status = "En attente"
+                break
+            case "downloading":
+            case 2:
+                status = "En cours de téléchargement"
+                break
+            case "paused":
+            case 3:
+                status = "En pause"
+                break
+            case "finishing":
+            case 4:
+                status = "En cours de finalisation"
+                break
+            case "finished":
+            case 5:
+                status = "Terminé"
+                break
+            case "filehosting_waiting":
+            case 8:
+                status = "En attente de l'hébergeur"
+                break
+            case "extracting":
+            case 9:
+                status = "En cours d'extraction"
+                break
+            case "error":
+            case 10:
+                status = "Erreur"
+                break
+            default:
+                status = "Inconnu"
+        }
+
 
         let size_downloaded = task.additional.transfer.size_downloaded;
         let size_total = task.size;
@@ -238,21 +288,24 @@ function setItems(tasks) {
 
         let title = formatTitre(task.title)
 
+        let downloaded = getSize(size_downloaded)
+        let download = getSize(size_total)
+
         list.append('<li class="list-group-item">\n' +
             '                    <div class="row">\n' +
             '                        <div class="col">\n' +
-            '                           <p>\n' +
+            '                           <p style="font-size: 11pt; margin-bottom: 2px">\n' +
             '                            ' + title + '\n' +
             '                           </p>\n' +
+            '                           <small>' + status + ' - ' + downloaded + ' sur ' + download + '</small>' +
             '                           <div class="progress"  style="margin-top:15px">\n' +
             '                               <div class="progress-bar" role="progressbar" style="width: ' + pourcent + '%;" aria-valuenow="' + pourcent + '" aria-valuemin="0" aria-valuemax="100">' + pourcent + '%</div>\n' +
             '                           </div>\n' +
             '                        </div>\n' +
             '                        <div class="col-2" style="text-align: right">\n' +
             playPause +
-            '                            </button>\n' +
             '                            <button type="button" class="btn btn-sm btn-outline-danger" id="cancel' + task.id + '" >\n' +
-            '                                <i class="fas fa-stop"></i>\n' +
+            '                                <i class="fas fa-trash"></i>\n' +
             '                            </button>\n' +
             '                            <button type="button" class="btn btn-sm btn-outline-secondary" id="folder' + task.id + '" data-toggle="modal" data-target="#modalFolder">\n' +
             '                                <i class="fas fa-folder"></i>\n' +
