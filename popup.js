@@ -207,127 +207,128 @@ function resumeDownload(element, id) {
 }
 
 function setItems(tasks) {
-    let list = $("#listItems")
-    list.empty()
+    console.log(tasks)
+    if (tasks[0] !== undefined && tasks[0].status !== "error") {
+        let list = $("#listItems")
+        list.empty()
 
-    tasks.forEach(function (task) {
-        let playPause
-        let status
+        tasks.forEach(function (task) {
+            let playPause
+            let status
 
-        switch (task.status) {
-            case "waiting":
-            case "finishing":
-            case "extracting":
-            case 1:
-            case 4:
-            case 9:
-                playPause = '<button type="button" class="btn btn-sm btn-outline-info" id="waiting' + task.id + '" >\n' +
-                    '           <i class="fas fa-hourglass-half"></i>\n' +
-                    '         </button>\n'
-                break
-            case "downloading":
-            case 2:
-                playPause = '<button type="button" class="btn btn-sm btn-outline-warning" id="pause' + task.id + '" >\n' +
-                    '           <i class="fas fa-pause"></i>\n' +
-                    '        </button>\n'
-                break
-            case "paused":
-            case 3:
-                playPause = '<button type="button" class="btn btn-sm btn-outline-success" id="play' + task.id + '" >\n' +
-                    '           <i class="fas fa-play"></i>\n' +
-                    '        </button>\n'
-                break
-            default:
-                playPause = ''
-        }
+            switch (task.status) {
+                case "waiting":
+                case "finishing":
+                case "extracting":
+                case 1:
+                case 4:
+                case 9:
+                    playPause = '<button type="button" class="btn btn-sm btn-outline-info" id="waiting' + task.id + '" >\n' +
+                        '           <i class="fas fa-hourglass-half"></i>\n' +
+                        '         </button>\n'
+                    break
+                case "downloading":
+                case 2:
+                    playPause = '<button type="button" class="btn btn-sm btn-outline-warning" id="pause' + task.id + '" >\n' +
+                        '           <i class="fas fa-pause"></i>\n' +
+                        '        </button>\n'
+                    break
+                case "paused":
+                case 3:
+                    playPause = '<button type="button" class="btn btn-sm btn-outline-success" id="play' + task.id + '" >\n' +
+                        '           <i class="fas fa-play"></i>\n' +
+                        '        </button>\n'
+                    break
+                default:
+                    playPause = ''
+            }
 
-        switch (task.status) {
-            case "waiting":
-            case 1:
-                status = "En attente"
-                break
-            case "downloading":
-            case 2:
-                status = "En cours de téléchargement"
-                break
-            case "paused":
-            case 3:
-                status = "En pause"
-                break
-            case "finishing":
-            case 4:
-                status = "En cours de finalisation"
-                break
-            case "finished":
-            case 5:
-                status = "Terminé"
-                break
-            case "filehosting_waiting":
-            case 8:
-                status = "En attente de l'hébergeur"
-                break
-            case "extracting":
-            case 9:
-                status = "En cours d'extraction"
-                break
-            case "error":
-            case 10:
-                status = "Erreur"
-                break
-            default:
-                status = "Inconnu"
-        }
-
-
-        let size_downloaded = task.additional.transfer.size_downloaded;
-        let size_total = task.size;
-        let pourcent = Math.round((size_downloaded * 100) / size_total);
-        if (isNaN(pourcent))
-            pourcent = 0;
+            switch (task.status) {
+                case "waiting":
+                case 1:
+                    status = "En attente"
+                    break
+                case "downloading":
+                case 2:
+                    status = "En cours de téléchargement"
+                    break
+                case "paused":
+                case 3:
+                    status = "En pause"
+                    break
+                case "finishing":
+                case 4:
+                    status = "En cours de finalisation"
+                    break
+                case "finished":
+                case 5:
+                    status = "Terminé"
+                    break
+                case "filehosting_waiting":
+                case 8:
+                    status = "En attente de l'hébergeur"
+                    break
+                case "extracting":
+                case 9:
+                    status = "En cours d'extraction"
+                    break
+                case "error":
+                case 10:
+                    status = "Erreur"
+                    break
+                default:
+                    status = "Inconnu"
+            }
 
 
-        let title = formatTitre(task.title)
-
-        let downloaded = getSize(size_downloaded)
-        let download = getSize(size_total)
-
-        list.append('<li class="list-group-item">\n' +
-            '                    <div class="row">\n' +
-            '                        <div class="col">\n' +
-            '                           <p style="font-size: 11pt; margin-bottom: 2px">\n' +
-            '                            ' + title + '\n' +
-            '                           </p>\n' +
-            '                           <small>' + status + ' - ' + downloaded + ' sur ' + download + '</small>' +
-            '                           <div class="progress"  style="margin-top:15px">\n' +
-            '                               <div class="progress-bar" role="progressbar" style="width: ' + pourcent + '%;" aria-valuenow="' + pourcent + '" aria-valuemin="0" aria-valuemax="100">' + pourcent + '%</div>\n' +
-            '                           </div>\n' +
-            '                        </div>\n' +
-            '                        <div class="col-2" style="text-align: right">\n' +
-            playPause +
-            '                            <button type="button" class="btn btn-sm btn-outline-danger" id="cancel' + task.id + '" >\n' +
-            '                                <i class="fas fa-trash"></i>\n' +
-            '                            </button>\n' +
-            '                            <button type="button" class="btn btn-sm btn-outline-secondary" id="folder' + task.id + '" data-toggle="modal" data-target="#modalFolder">\n' +
-            '                                <i class="fas fa-folder"></i>\n' +
-            '                                <i class="fas fa-folder-open"></i>\n' +
-            '                            </button>\n' +
-            '                        </div>\n' +
-            '                    </div>\n' +
-            '                </li>')
+            let size_downloaded = task.additional.transfer.size_downloaded;
+            let size_total = task.size;
+            let pourcent = Math.round((size_downloaded * 100) / size_total);
+            if (isNaN(pourcent))
+                pourcent = 0;
 
 
+            let title = formatTitre(task.title)
 
-        /*
-        let cancelButton = $("#cancel" + task.id)
-        let pauseButton = $("#pause" + task.id)
-        let resumeButton = $("#resume" + task.id)
+            let downloaded = getSize(size_downloaded)
+            let download = getSize(size_total)
 
-        cancelButton.bind('click', cancelDownload(cancelButton, task.id))
-        pauseButton.bind('click', pauseDownload(pauseButton, task.id))
-        resumeButton.bind('click', resumeDownload(resumeButton, task.id))
-        */
-    })
+            list.append('<li class="list-group-item">\n' +
+                '                    <div class="row">\n' +
+                '                        <div class="col">\n' +
+                '                           <p style="font-size: 11pt; margin-bottom: 2px">\n' +
+                '                            ' + title + '\n' +
+                '                           </p>\n' +
+                '                           <small>' + status + ' - ' + downloaded + ' sur ' + download + '</small>' +
+                '                           <div class="progress"  style="margin-top:15px">\n' +
+                '                               <div class="progress-bar" role="progressbar" style="width: ' + pourcent + '%;" aria-valuenow="' + pourcent + '" aria-valuemin="0" aria-valuemax="100">' + pourcent + '%</div>\n' +
+                '                           </div>\n' +
+                '                        </div>\n' +
+                '                        <div class="col-2" style="text-align: right">\n' +
+                playPause +
+                '                            <button type="button" class="btn btn-sm btn-outline-danger" id="cancel' + task.id + '" >\n' +
+                '                                <i class="fas fa-trash"></i>\n' +
+                '                            </button>\n' +
+                '                            <button type="button" class="btn btn-sm btn-outline-secondary" id="folder' + task.id + '" data-toggle="modal" data-target="#modalFolder">\n' +
+                '                                <i class="fas fa-folder"></i>\n' +
+                '                                <i class="fas fa-folder-open"></i>\n' +
+                '                            </button>\n' +
+                '                        </div>\n' +
+                '                    </div>\n' +
+                '                </li>')
+
+
+            let cancelButton = $("#cancel" + task.id)
+            let pauseButton = $("#pause" + task.id)
+            let resumeButton = $("#resume" + task.id)
+
+            //cancelButton.bind('click', cancelButton, task.id, cancelDownload)
+            //pauseButton.bind('click', pauseDownload(pauseButton, task.id))
+            //resumeButton.bind('click', resumeDownload(resumeButton, task.id))
+        })
+    }
 }
+
 
 function getSize(size) {
     let unit, roundValue
@@ -352,7 +353,6 @@ function formatTitre(title) {
 }
 
 function loadData(settings) {
-    console.log("Chargement")
     let divNbDownload = $("#nbDownloads")
 
     divNbDownload.empty()
@@ -382,7 +382,6 @@ function loadData(settings) {
                     '                ' + nbDownloads + ' téléchargement en cours\n' +
                     '            </span>')
             }
-
             setItems(response.tasks)
 
         }

@@ -21,7 +21,6 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             $response = listDownloads($url, $cookies);
             $result['tasks'] = $response['tasks'];
             $result['success'] = $response['success'];
-
             logout($url);
         } else {
             $result['success'] = false;
@@ -122,7 +121,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
 
     } else if ($_POST['method'] == "status") {
-        $error = false;
+        $result['success'] = false;
 
         $username = $_POST['username'];
         $password = $_POST['password'];
@@ -389,7 +388,6 @@ function listDownloads($url, $cookies) {
     $response = json_decode($response, true);
     curl_close($curl);
     $returnArray['success'] = $response['success'];
-
 
     if ($returnArray['success']) {
         $returnArray['tasks'] = array();
