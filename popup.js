@@ -318,17 +318,30 @@ function setItems(tasks) {
                 '                </li>')
 
 
-            let cancelButton = $("#cancel" + task.id)
-            let pauseButton = $("#pause" + task.id)
-            let resumeButton = $("#resume" + task.id)
+            let cancelButton = document.getElementById("cancel" + task.id)
+            let pauseButton = document.getElementById("pause" + task.id)
+            let resumeButton = document.getElementById("resume" + task.id)
 
-            //cancelButton.bind('click', cancelButton, task.id, cancelDownload)
-            //pauseButton.bind('click', pauseDownload(pauseButton, task.id))
-            //resumeButton.bind('click', resumeDownload(resumeButton, task.id))
+            if (cancelButton) {
+                cancelButton.addEventListener('click', function () {
+                    cancelDownload(cancelButton, task.id)
+                });
+            }
+
+            if (pauseButton) {
+                pauseButton.addEventListener('click', function () {
+                    pauseDownload(pauseButton, task.id)
+                });
+            }
+
+            if (resumeButton) {
+                resumeButton.addEventListener('click', function () {
+                    resumeDownload(resumeButton, task.id)
+                });
+            }
         })
     }
 }
-
 
 function getSize(size) {
     let unit, roundValue
