@@ -422,8 +422,12 @@ function listDownloads($url, $cookies) {
 
         $returnArray['success'] = $response2['success'];
 
-        if ($returnArray['success']) {
+        if ( ($response2['data']['tasks'][0]['status'] === "error") && (!isset($response2['data']['tasks'][0]['id'])) )  {
+            $returnArray['tasks'] = array();
+
+        } else if ($returnArray['success']) {
             $returnArray['tasks'] = $response2['data']['tasks'];
+
         }
 
     }
