@@ -83,7 +83,7 @@ function pauseDownload(element, id) {
         }
 
         var form = new FormData();
-        form.append("method", "delete");
+        form.append("method", "pause");
         form.append("username", username);
         form.append("password", password);
         form.append("protocol", protocol);
@@ -183,7 +183,7 @@ function resumeDownload(element, id) {
 
 
         var form = new FormData();
-        form.append("method", "delete");
+        form.append("method", "resume");
         form.append("username", username);
         form.append("password", password);
         form.append("protocol", protocol);
@@ -235,7 +235,7 @@ function setItems(tasks) {
                     break
                 case "paused":
                 case 3:
-                    playPause = '<button type="button" class="btn btn-sm btn-outline-success" id="play' + task.id + '" >\n' +
+                    playPause = '<button type="button" class="btn btn-sm btn-outline-success" id="resume' + task.id + '" >\n' +
                         '           <i class="fas fa-play"></i>\n' +
                         '        </button>\n'
                     break
@@ -319,21 +319,20 @@ function setItems(tasks) {
 
 
             let cancelButton = document.getElementById("cancel" + task.id)
-            let pauseButton = document.getElementById("pause" + task.id)
-            let resumeButton = document.getElementById("resume" + task.id)
-
             if (cancelButton) {
                 cancelButton.addEventListener('click', function () {
                     cancelDownload(cancelButton, task.id)
                 });
             }
 
+            let pauseButton = document.getElementById("pause" + task.id)
             if (pauseButton) {
                 pauseButton.addEventListener('click', function () {
                     pauseDownload(pauseButton, task.id)
                 });
             }
 
+            let resumeButton = document.getElementById("resume" + task.id)
             if (resumeButton) {
                 resumeButton.addEventListener('click', function () {
                     resumeDownload(resumeButton, task.id)
