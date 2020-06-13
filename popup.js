@@ -321,6 +321,8 @@ function setItems(tasks) {
             let cancelButton = document.getElementById("cancel" + task.id)
             if (cancelButton) {
                 cancelButton.addEventListener('click', function () {
+                    let ligne = cancelButton.parentElement.parentElement.parentElement
+                    ligne.remove()
                     cancelDownload(cancelButton, task.id)
                 });
             }
@@ -329,6 +331,12 @@ function setItems(tasks) {
             if (pauseButton) {
                 pauseButton.addEventListener('click', function () {
                     pauseDownload(pauseButton, task.id)
+                    pauseButton.innerHTML = '<i class="fas fa-play"></i>'
+                    resumeButton.classList.remove("btn-outline-warning");
+                    resumeButton.classList.add("btn-outline-success")
+                    resumeButton.addEventListener('click', function () {
+                        //TODO assigner la fonction de play au bouton
+                    })
                 });
             }
 
@@ -336,6 +344,12 @@ function setItems(tasks) {
             if (resumeButton) {
                 resumeButton.addEventListener('click', function () {
                     resumeDownload(resumeButton, task.id)
+                    resumeButton.innerHTML = '<i class="fas fa-pause"></i>'
+                    resumeButton.classList.remove("btn-outline-success");
+                    resumeButton.classList.add("btn-outline-warning")
+                    resumeButton.addEventListener('click', function () {
+                        //TODO assigner la fonction de pause au bouton
+                    })
                 });
             }
         })
